@@ -14,3 +14,5 @@
 from .base_model import *
 from .configuration import *
 from .modeling import *
+from .blip2_base import *
+

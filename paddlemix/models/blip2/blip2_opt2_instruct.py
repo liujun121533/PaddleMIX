@@ -20,6 +20,7 @@ import paddle.nn as nn
 
 from paddlemix.models.blip2.blip2_base import Blip2Base
 from paddlemix.models.blip2.configuration import Blip2Config
+from paddlenlp.transformers.llama.modeling import LlamaForCausalLM
 
 
 def masked_fill(x, mask, value):
@@ -38,8 +39,8 @@ class Blip2OptInstruct(Blip2Base):
         vit_precision="fp32",
         freeze_vit=True,
         num_query_token=32,
-        llm_model="facebook/opt-2.7b",
-        # llm_model="lmsys/vicuna-7b-v1.1",
+        # llm_model="facebook/opt-2.7b",
+        llm_model="/home/aistudio/data/data250423/vicuna7b-V1.1",
         prompt="",
         max_txt_len=128,
         max_output_txt_len=256,
@@ -47,7 +48,7 @@ class Blip2OptInstruct(Blip2Base):
         qformer_text_input=False,
     ):
         super().__init__(config=Blip2Config())
-        from paddlenlp.transformers import AutoTokenizer, OPTForCausalLM
+        from paddlenlp.transformers import AutoTokenizer, OPTForCausalLM, LlamaTokenizer
 
         self.tokenizer = self.init_tokenizer(truncation_side="left")
         self.visual_encoder, self.ln_vision = self.init_vision_encoder(
@@ -73,9 +74,10 @@ class Blip2OptInstruct(Blip2Base):
             self.Qformer.resize_token_embeddings(len(self.tokenizer))
         self.Qformer.cls = None
 
-        self.llm_tokenizer = AutoTokenizer.from_pretrained(llm_model, use_fast=False, truncation_side="left", return_attention_mask=True)
+        self.llm_tokenizer = LlamaTokenizer.from_pretrained(llm_model, use_fast=False, truncation_side="left", return_attention_mask=True)
         # self.llm_model = OPTForCausalLM.from_pretrained(llm_model, paddle_dtype=paddle.float16)
-        self.llm_model = OPTForCausalLM.from_pretrained(llm_model)
+        # self.llm_model = OPTForCausalLM.from_pretrained(llm_model)
+        self.llm_model = LlamaForCausalLM.from_pretrained(llm_model, convert_from_torch=True)
         self.llm_tokenizer.add_special_tokens({"pad_token": "[PAD]"})
         self.llm_tokenizer.add_special_tokens({"bos_token": "</s>"})
         self.llm_tokenizer.add_special_tokens({"eos_token": "</s>"})

@@ -1,3 +1,5 @@
+
+
 import paddle  # # noqa: F401
 from PIL import Image
 
@@ -8,7 +10,7 @@ model = Blip2OptInstruct(vit_precision="fp32")
 from load_model_and_preprocess import load_model_and_preprocess
 
 # loads InstructBLIP model
-model, vis_processors, _ = load_model_and_preprocess(model_type="facebook/opt-2.7b", is_eval=True)
+model, vis_processors, _ = load_model_and_preprocess(model_type="/home/aistudio/work/vicuna-instruct-22", is_eval=True)
 # model, vis_processors, _ = load_model_and_preprocess(name="blip2_vicuna_instruct", model_type="vicuna7b", is_eval=True)
 # prepare the image
 image = vis_processors["eval"](raw_image).unsqueeze(0)

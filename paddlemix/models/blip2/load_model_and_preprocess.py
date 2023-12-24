@@ -91,4 +91,4 @@ def load_model_and_preprocess(model_type, is_eval=False, device="cpu"):
     return model.to(device), vis_processors, txt_processors
 
 if __name__ == '__main__':
-    load_model_and_preprocess(model_type='facebook/opt-2.7b')
+    load_model_and_preprocess(model_type='fufu/vicuna-instruct-22')
